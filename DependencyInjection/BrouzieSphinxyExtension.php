@@ -22,7 +22,7 @@ class BrouzieSphinxyExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
+        $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
@@ -57,12 +57,16 @@ class BrouzieSphinxyExtension extends Extension
         $connectionDef = new Definition('Brouzie\Sphinxy\Connection');
         $connectionDef->addArgument(new Reference($adapterConnectionId));
 
-        if ($connection['logging']) { //FIXME: this will not work correctly for references like %kernel.debug%
-            // https://github.com/snc/SncRedisBundle/issues/114
+        if ($connection['logging']) {
             $profilingLoggerId = sprintf('brouzie_sphinxy.%s_logger', $connection['alias']);
             $container->setDefinition($profilingLoggerId, new DefinitionDecorator('brouzie.sphinxy.logger'));
             $connectionDef->addMethodCall('setLogger', array(new Reference($profilingLoggerId)));
         }
         $container->setDefinition($connectionId, $connectionDef);
+    }
+
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new Configuration($container->getParameter('kernel.debug'));
     }
 }
