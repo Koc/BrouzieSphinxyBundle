@@ -1,0 +1,23 @@
+{
+    "name": "brouzie/brouzie-sphinxy-bundle",
+    "description": "Sphinx library integration for Symfony2",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Konstantin.Myakshin",
+            "email": "koc-dp@yandex.ru"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*@stable"
+    },
+    "autoload": {
+        "psr-0": {
+            "Brouzie\\Bundle\\SphinxyBundle": ""
+        }
+    },
+    "target-dir" : "Brouzie/Bundle/SphinxyBundle"
+}
