@@ -1,6 +1,6 @@
 {
     "name": "brouzie/brouzie-sphinxy-bundle",
-    "description": "Sphinx library integration for Symfony2",
+    "description": "Sphinxy integration for Symfony2",
     "license": "MIT",
     "authors": [
         {
@@ -9,10 +9,12 @@
         }
     ],
     "require": {
-        "php": ">=5.3.8"
+        "php": ">=5.3.8",
+        "symfony/framework-bundle": ">=2.1,<3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*@stable"
+        "phpunit/phpunit": "3.7.*@stable",
+        "symfony/console": ">=2.1,<3.0"
     },
     "autoload": {
         "psr-0": {
