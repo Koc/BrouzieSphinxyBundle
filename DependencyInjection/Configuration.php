@@ -43,6 +43,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->fixXmlConfig('connection')
             ->children()
+                ->scalarNode('default_connection')->cannotBeEmpty()->defaultValue('default')->end()
                 ->arrayNode('connections')
                     ->isRequired()
                     ->requiresAtLeastOneElement()

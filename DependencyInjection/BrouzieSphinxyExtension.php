@@ -26,11 +26,16 @@ class BrouzieSphinxyExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
+        $loader->load('sphinxy.xml');
 
+        $connections = array();
         foreach ($config['connections'] as $connection) {
-            $this->loadConnection($connection, $container);
+            list($alias, $serviceId) = $this->loadConnection($connection, $container);
+            $connections[$alias] = $serviceId;
         }
+
+        $container->setParameter('sphinxy.connections', $connections);
+        $container->setParameter('sphinxy.default_connection', $config['default_connection']);
     }
 
     /**
@@ -41,28 +46,30 @@ class BrouzieSphinxyExtension extends Extension
      */
     protected function loadConnection(array $connection, ContainerBuilder $container)
     {
-        $dsnParameterId = sprintf('brouzie_sphinxy.connection.%s_dsn', $connection['alias']);
+        $dsnParameterId = sprintf('sphinxy.connection.%s_dsn', $connection['alias']);
         $container->setParameter($dsnParameterId, $connection['dsn']);
 
-        $loggingParameterId = sprintf('brouzie_sphinxy.connection.%s_logging', $connection['alias']);
+        $loggingParameterId = sprintf('sphinxy.connection.%s_logging', $connection['alias']);
         $container->setParameter($loggingParameterId, $connection['logging']);
 
-        $adapterConnectionId = sprintf('brouzie_sphinxy.%s_adapter_connection', $connection['alias']);
+        $adapterConnectionId = sprintf('sphinxy.%s_adapter_connection', $connection['alias']);
         $adapterConnectionDef = new Definition('Brouzie\Sphinxy\Connection\PdoConnection');
         $adapterConnectionDef->addArgument($container->getParameter($dsnParameterId));
         $adapterConnectionDef->setPublic(false);
         $container->setDefinition($adapterConnectionId, $adapterConnectionDef);
 
-        $connectionId = sprintf('brouzie_sphinxy.%s_connection', $connection['alias']);
+        $connectionId = sprintf('sphinxy.%s_connection', $connection['alias']);
         $connectionDef = new Definition('Brouzie\Sphinxy\Connection');
         $connectionDef->addArgument(new Reference($adapterConnectionId));
 
         if ($connection['logging']) {
-            $profilingLoggerId = sprintf('brouzie_sphinxy.%s_logger', $connection['alias']);
-            $container->setDefinition($profilingLoggerId, new DefinitionDecorator('brouzie.sphinxy.logger'));
+            $profilingLoggerId = sprintf('sphinxy.%s_logger', $connection['alias']);
+            $container->setDefinition($profilingLoggerId, new DefinitionDecorator('sphinxy.logger'));
             $connectionDef->addMethodCall('setLogger', array(new Reference($profilingLoggerId)));
         }
         $container->setDefinition($connectionId, $connectionDef);
+
+        return array($connection['alias'], $connectionId);
     }
 
     public function getConfiguration(array $config, ContainerBuilder $container)
