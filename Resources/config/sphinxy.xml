@@ -19,11 +19,7 @@
             <argument type="service" id="debug.stopwatch" on-invalid="null" />
         </service>
 
-        <service id="sphinxy.logger_chain" class="%sphinxy.logger_chain.class%" public="false" abstract="true">
-            <call method="addLogger">
-                <argument type="service" id="sphinxy.logger" />
-            </call>
-        </service>
+        <service id="sphinxy.logger_chain" class="%sphinxy.logger_chain.class%" public="false" abstract="true" />
 
         <service id="sphinxy.logger_profiling" class="%sphinxy.logger_profiling.class%" public="false" abstract="true" />
 

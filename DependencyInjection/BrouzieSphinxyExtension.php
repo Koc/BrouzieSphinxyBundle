@@ -76,10 +76,13 @@ class BrouzieSphinxyExtension extends Extension
 
             if (null !== $loggerId) {
                 $chainLogger = new DefinitionDecorator('sphinxy.logger_chain');
+                $chainLogger->addMethodCall('addLogger', array(new Reference($loggerId)));
                 $chainLogger->addMethodCall('addLogger', array($profilingLogger));
 
                 $loggerId = sprintf('sphinxy.%s_logger_chain', $connection['alias']);
                 $container->setDefinition($loggerId, $chainLogger);
+            } else {
+                $loggerId = $profilingLoggerId;
             }
         }
 
