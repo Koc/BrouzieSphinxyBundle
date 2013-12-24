@@ -62,11 +62,31 @@ class BrouzieSphinxyExtension extends Extension
         $connectionDef = new Definition('Brouzie\Sphinxy\Connection');
         $connectionDef->addArgument(new Reference($adapterConnectionId));
 
+        $loggerId = null;
         if ($connection['logging']) {
-            $profilingLoggerId = sprintf('sphinxy.%s_logger', $connection['alias']);
-            $container->setDefinition($profilingLoggerId, new DefinitionDecorator('sphinxy.logger'));
-            $connectionDef->addMethodCall('setLogger', array(new Reference($profilingLoggerId)));
+            $loggerId = sprintf('sphinxy.%s_logger', $connection['alias']);
+            $container->setDefinition($loggerId, new DefinitionDecorator('sphinxy.logger'));
         }
+
+        if ($connection['profiling']) {
+            $profilingLoggerId = sprintf('sphinxy.%s_logger_profiling', $connection['alias']);
+            $container->setDefinition($profilingLoggerId, new DefinitionDecorator('sphinxy.logger_profiling'));
+            $profilingLogger = new Reference($profilingLoggerId);
+            $container->getDefinition('data_collector.sphinxy')->addMethodCall('addLogger', array($connection['alias'], $profilingLogger));
+
+            if (null !== $loggerId) {
+                $chainLogger = new DefinitionDecorator('sphinxy.logger_chain');
+                $chainLogger->addMethodCall('addLogger', array($profilingLogger));
+
+                $loggerId = sprintf('sphinxy.%s_logger_chain', $connection['alias']);
+                $container->setDefinition($loggerId, $chainLogger);
+            }
+        }
+
+        if ($loggerId) {
+            $connectionDef->addMethodCall('setLogger', array(new Reference($loggerId)));
+        }
+
         $container->setDefinition($connectionId, $connectionDef);
 
         return array($connection['alias'], $connectionId);

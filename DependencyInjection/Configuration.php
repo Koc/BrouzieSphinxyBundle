@@ -52,6 +52,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('alias')->isRequired()->end()
                             ->booleanNode('logging')->defaultValue($this->debug)->end()
+                            ->booleanNode('profiling')->defaultValue($this->debug)->end()
                             ->scalarNode('dsn')->isRequired()->end()
                         ->end()
                     ->end()

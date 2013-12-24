@@ -6,6 +6,8 @@
 
     <parameters>
         <parameter key="sphinxy.logger.class">Brouzie\Bundle\SphinxyBundle\Logger\SphinxyLogger</parameter>
+        <parameter key="sphinxy.logger_chain.class">Brouzie\Sphinxy\Logging\LoggerChain</parameter>
+        <parameter key="sphinxy.logger_profiling.class">Brouzie\Sphinxy\Logging\DebugStack</parameter>
         <parameter key="sphinxy.data_collector.class">Brouzie\Bundle\SphinxyBundle\DataCollector\SphinxyDataCollector</parameter>
         <parameter key="sphinxy.class">Brouzie\Bundle\SphinxyBundle\Sphinxy\Registry</parameter>
     </parameters>
@@ -17,12 +19,25 @@
             <argument type="service" id="debug.stopwatch" on-invalid="null" />
         </service>
 
+        <service id="sphinxy.logger_chain" class="%sphinxy.logger_chain.class%" public="false" abstract="true">
+            <call method="addLogger">
+                <argument type="service" id="sphinxy.logger" />
+            </call>
+        </service>
+
+        <service id="sphinxy.logger_profiling" class="%sphinxy.logger_profiling.class%" public="false" abstract="true" />
+
         <service id="sphinxy" class="%sphinxy.class%">
             <argument>%sphinxy.connections%</argument>
             <argument>%sphinxy.default_connection%</argument>
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>
+        </service>
+
+        <service id="data_collector.sphinxy" class="%sphinxy.data_collector.class%" public="false">
+            <tag name="data_collector" template="BrouzieSphinxyBundle:Collector:sphinxy" id="sphinxy" />
+            <argument type="service" id="sphinxy" />
         </service>
     </services>
 
