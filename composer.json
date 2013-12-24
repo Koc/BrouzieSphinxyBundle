@@ -1,5 +1,5 @@
 {
-    "name": "brouzie/brouzie-sphinxy-bundle",
+    "name": "brouzie/sphinxy-bundle",
     "description": "Sphinxy integration for Symfony2",
     "keywords": ["sphinx", "sphinxy", "symfony"],
     "homepage": "https://github.com/Koc/BrouzieSphinxyBundle",
