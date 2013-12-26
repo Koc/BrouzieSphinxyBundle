@@ -31,14 +31,14 @@ class PopulateIndexCommand extends ContainerAwareCommand
         $connecton = $this->getContainer()->get('sphinxy')->getConnection($input->getOption('connection'));
         $connecton->setLogger(null);
 
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        /* @var $em EntityManager */
+        $indexers = $this->getContainer()->getParameter('sphinxy.indexers');
 
-        $em->getConfiguration()->setSQLLogger(null);
-        $em->getConnection()->getConfiguration()->setSQLLogger(null);
+        if (!isset($indexers[$index])) {
+            throw new \InvalidArgumentException('Unknown index');
+        }
 
-        $indexer = $this->getContainer()->get('sphinxy.indexer.doctrine_qb_indexer');
-        /* @var $indexer DoctrineQbIndexer */
+        $indexer = $this->getContainer()->get($indexers[$index]);
+        /* @var $indexer IndexerInterface */
 
         if ($input->getOption('truncate')) {
             $output->writeln('<info>Truncate index</info>');
