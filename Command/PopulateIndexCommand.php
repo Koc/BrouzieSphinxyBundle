@@ -2,15 +2,13 @@
 
 namespace Brouzie\Bundle\SphinxyBundle\Command;
 
-use Brouzie\Bundle\SphinxyBundle\Indexer\DoctrineQbIndexer;
-
-use Doctrine\ORM\EntityManager;
-
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+
+use Brouzie\Sphinxy\Indexer\IndexerInterface;
 
 class PopulateIndexCommand extends ContainerAwareCommand
 {
