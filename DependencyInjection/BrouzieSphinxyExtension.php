@@ -43,6 +43,8 @@ class BrouzieSphinxyExtension extends Extension
      *
      * @param array            $connection    A client configuration
      * @param ContainerBuilder $container A ContainerBuilder instance
+     *
+     * @return array           Array of connection alias and connection service id
      */
     protected function loadConnection(array $connection, ContainerBuilder $container)
     {

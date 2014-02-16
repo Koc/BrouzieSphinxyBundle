@@ -10,6 +10,7 @@
         <parameter key="sphinxy.logger_profiling.class">Brouzie\Sphinxy\Logging\DebugStack</parameter>
         <parameter key="sphinxy.data_collector.class">Brouzie\Bundle\SphinxyBundle\DataCollector\SphinxyDataCollector</parameter>
         <parameter key="sphinxy.class">Brouzie\Bundle\SphinxyBundle\Sphinxy\Registry</parameter>
+        <parameter key="sphinxy.index_manager.class">Brouzie\Sphinxy\IndexManager</parameter>
     </parameters>
 
     <services>
@@ -29,6 +30,12 @@
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>
+        </service>
+
+        <service id="sphinxy.index_manager" class="%sphinxy.index_manager.class%">
+            <argument type="service" id="sphinxy" />
+            <argument type="service" id="service_container" />
+            <argument>%sphinxy.indexers%</argument>
         </service>
 
         <service id="data_collector.sphinxy" class="%sphinxy.data_collector.class%" public="false">
