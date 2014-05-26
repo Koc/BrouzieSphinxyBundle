@@ -13,13 +13,13 @@ class PopulateIndexCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        //TODO: add support of the custom batch size
-        //FIXME: add support of the connection
+        //TODO: add support of the connection
 
         $this
             ->setName('sphinxy:populate-index')
             ->addArgument('index', InputArgument::REQUIRED)
             ->addOption('truncate', null, InputOption::VALUE_NONE)
+            ->addOption('increment', null, InputOption::VALUE_NONE)
             ->addOption('batch-size', null, InputOption::VALUE_OPTIONAL, '', 1000)
 //            ->addOption('connection', null, InputOption::VALUE_OPTIONAL)
         ;
@@ -38,16 +38,25 @@ class PopulateIndexCommand extends ContainerAwareCommand
         $progress = $this->getHelperSet()->get('progress');
         /* @var $progress ProgressHelper  */
         $progress->setBarWidth(50);
+        //FIXME: fix percentage calculation for last iteration
 
-        $indexManager->reindex($index, $input->getOption('batch-size'), function($info) use (&$output, &$progress) {
-                static $started = false;
-                if (!$started) {
-                    $progress->start($output, $info['max_id']);
-                    $started = true;
-                }
+        $rangeCriterias = array();
+        if ($input->getOption('increment')) {
+            if ($indexRange = $indexManager->getIndexRange($index)) {
+                $rangeCriterias = array('min' => $indexRange['max']);
+            }
+        }
 
-                $progress->setCurrent($info['id_from'], true);
-            });
+        $batchCallback = function ($info) use ($output, $progress) {
+            static $started = false;
+            if (!$started) {
+                $progress->start($output, $info['max_id']);
+                $started = true;
+            }
+
+            $progress->setCurrent($info['id_from'], true);
+        };
+        $indexManager->reindex($index, $input->getOption('batch-size'), $batchCallback, $rangeCriterias);
 
         $progress->finish();
     }
