@@ -20,6 +20,7 @@ class PopulateIndexCommand extends ContainerAwareCommand
             ->setName('sphinxy:populate-index')
             ->addArgument('index', InputArgument::REQUIRED)
             ->addOption('truncate', null, InputOption::VALUE_NONE)
+            ->addOption('batch-size', null, InputOption::VALUE_OPTIONAL, '', 1000)
 //            ->addOption('connection', null, InputOption::VALUE_OPTIONAL)
         ;
     }
@@ -38,7 +39,7 @@ class PopulateIndexCommand extends ContainerAwareCommand
         /* @var $progress ProgressHelper  */
         $progress->setBarWidth(50);
 
-        $indexManager->reindex($index, 1000, function($info) use (&$output, &$progress) {
+        $indexManager->reindex($index, $input->getOption('batch-size'), function($info) use (&$output, &$progress) {
                 static $started = false;
                 if (!$started) {
                     $progress->start($output, $info['max_id']);
