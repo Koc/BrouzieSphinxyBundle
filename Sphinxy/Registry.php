@@ -38,4 +38,14 @@ class Registry extends BaseRegistry implements ContainerAwareInterface
 
         return $connections;
     }
+
+    public function getConnectionNames()
+    {
+        $connections = array();
+        foreach (parent::getConnections() as $name => $serviceId) {
+            $connections[$name] = $serviceId;
+        }
+
+        return $connections;
+    }
 }

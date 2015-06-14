@@ -71,8 +71,9 @@ class BrouzieSphinxyExtension extends Extension
         }
 
         if ($connection['profiling']) {
+            $loggerServiceId = $connection['display_traces'] ? 'sphinxy.logger_profiling_tracing' : 'sphinxy.logger_profiling';
             $profilingLoggerId = sprintf('sphinxy.%s_logger_profiling', $connection['alias']);
-            $container->setDefinition($profilingLoggerId, new DefinitionDecorator('sphinxy.logger_profiling'));
+            $container->setDefinition($profilingLoggerId, new DefinitionDecorator($loggerServiceId));
             $profilingLogger = new Reference($profilingLoggerId);
             $container->getDefinition('data_collector.sphinxy')->addMethodCall('addLogger', array($connection['alias'], $profilingLogger));
 

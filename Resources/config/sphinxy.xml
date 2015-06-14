@@ -4,27 +4,20 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="sphinxy.logger.class">Brouzie\Bundle\SphinxyBundle\Logger\SphinxyLogger</parameter>
-        <parameter key="sphinxy.logger_chain.class">Brouzie\Sphinxy\Logging\LoggerChain</parameter>
-        <parameter key="sphinxy.logger_profiling.class">Brouzie\Sphinxy\Logging\DebugStack</parameter>
-        <parameter key="sphinxy.data_collector.class">Brouzie\Bundle\SphinxyBundle\DataCollector\SphinxyDataCollector</parameter>
-        <parameter key="sphinxy.class">Brouzie\Bundle\SphinxyBundle\Sphinxy\Registry</parameter>
-        <parameter key="sphinxy.index_manager.class">Brouzie\Sphinxy\IndexManager</parameter>
-    </parameters>
-
     <services>
-        <service id="sphinxy.logger" class="%sphinxy.logger.class%" public="false">
+        <service id="sphinxy.logger" class="Brouzie\Bundle\SphinxyBundle\Logger\SphinxyLogger" public="false">
             <tag name="monolog.logger" channel="sphinxy" />
             <argument type="service" id="logger" on-invalid="null" />
             <argument type="service" id="debug.stopwatch" on-invalid="null" />
         </service>
 
-        <service id="sphinxy.logger_chain" class="%sphinxy.logger_chain.class%" public="false" abstract="true" />
+        <service id="sphinxy.logger_chain" class="Brouzie\Sphinxy\Logging\LoggerChain" public="false" abstract="true" />
 
-        <service id="sphinxy.logger_profiling" class="%sphinxy.logger_profiling.class%" public="false" abstract="true" />
+        <service id="sphinxy.logger_profiling" class="Brouzie\Sphinxy\Logging\DebugStack" public="false" abstract="true" />
 
-        <service id="sphinxy" class="%sphinxy.class%">
+        <service id="sphinxy.logger_profiling_tracing" class="Brouzie\Sphinxy\Logging\TraceLogger" public="false" abstract="true" />
+
+        <service id="sphinxy" class="Brouzie\Bundle\SphinxyBundle\Sphinxy\Registry">
             <argument>%sphinxy.connections%</argument>
             <argument>%sphinxy.default_connection%</argument>
             <call method="setContainer">
@@ -32,13 +25,13 @@
             </call>
         </service>
 
-        <service id="sphinxy.index_manager" class="%sphinxy.index_manager.class%">
+        <service id="sphinxy.index_manager" class="Brouzie\Sphinxy\IndexManager">
             <argument type="service" id="sphinxy" />
             <argument type="service" id="service_container" />
             <argument>%sphinxy.indexers%</argument>
         </service>
 
-        <service id="data_collector.sphinxy" class="%sphinxy.data_collector.class%" public="false">
+        <service id="data_collector.sphinxy" class="Brouzie\Bundle\SphinxyBundle\DataCollector\SphinxyDataCollector" public="false">
             <tag name="data_collector" template="BrouzieSphinxyBundle:Collector:sphinxy" id="sphinxy" />
             <argument type="service" id="sphinxy" />
         </service>

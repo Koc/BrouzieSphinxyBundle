@@ -26,7 +26,7 @@ class SphinxyDataCollector extends DataCollector
     /**
      * Adds the stack logger for a connection.
      *
-     * @param string     $name
+     * @param string $name
      * @param DebugStack $logger
      */
     public function addLogger($name, DebugStack $logger)
@@ -45,7 +45,7 @@ class SphinxyDataCollector extends DataCollector
         }
 
         $this->data = array(
-            'queries'     => $queries,
+            'queries' => $queries,
             'connections' => $this->connections,
         );
     }
@@ -96,7 +96,7 @@ class SphinxyDataCollector extends DataCollector
 
     private function sanitizeQuery($query)
     {
-        $query['params'] = (array) $query['params'];
+        $query['params'] = (array)$query['params'];
 
         return $query;
     }
