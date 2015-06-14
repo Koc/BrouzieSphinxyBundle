@@ -18,9 +18,12 @@ class SphinxyDataCollector extends DataCollector
 
     private $connections;
 
-    public function __construct(Registry $registry)
+    private $indexers;
+
+    public function __construct(Registry $registry, array $indexers)
     {
         $this->connections = $registry->getConnectionNames();
+        $this->indexers = $indexers;
     }
 
     /**
@@ -47,6 +50,7 @@ class SphinxyDataCollector extends DataCollector
         $this->data = array(
             'queries' => $queries,
             'connections' => $this->connections,
+            'indexers' => $this->indexers,
         );
     }
 
@@ -63,7 +67,12 @@ class SphinxyDataCollector extends DataCollector
         return $this->data['connections'];
     }
 
-    public function getQueryCount()
+    public function getIndexers()
+    {
+        return $this->data['indexers'];
+    }
+
+    public function getQueriesCount()
     {
         return array_sum(array_map('count', $this->data['queries']));
     }

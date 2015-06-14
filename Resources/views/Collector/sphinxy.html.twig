@@ -9,15 +9,15 @@
 {% block toolbar %}
     {% set icon %}
         <img width="20" height="28" alt="Sphinx" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAcCAYAAABh2p9gAAAACXBIWXMAAAsSAAALEgHS3X78AAAB/ElEQVR42tXVz0sUYRzH8ecZpS7LughRByE8CBqx6qmQlqVdZBFCTFA6+Rd48dAhFAwkOkd2bJM61KHokiUIxqpBefMQxi6ESCFRhLoIm/ur9ze+A9vuuO3GHOoLL3Z+PPOZ58fMrC2Xy8bPcnxN+y8CbbFY9DfQ70Wx2WzW38BYLPanNm04pb9SOezjK37UBEYikepjLTiPyziLbvTottGwbbxHGm+wiqNfgdFo1A06jUFM4kKTI32HaQl2NEAOfMKjijDpyTqWUDomSIZf1Guk3bwEvkAXWrXRR8wijlHM1enZd0zhm14fcXQ+burdjM7FIjZ14veVVy3grs7xaxy6b8p93MCeLsKK3jmAz1j2CJNFuaXb0sOrsl+5KFL9eIkzuv8WYzjAK/Tp0D5gQkdxAp0YwIPqd1kaXMJj7OIitvAUD3UBJWhGh3kbG7inU2eqe+jWSZzDdQwhpMcPdY6t7n/RqVrTYR8bWFntuKILYDXwiT4JO6bqkWrk1ZNy+Ig858s0zPYzx3GuoeDV0IbD4UYCTSsVCATk8VnM5XLj8GxnU6lU3aBSqWTojclkMiaZTN6hlyOJRKI3Ho/vFQoFudHvgc18D/nUhWjfEQwG0zqXtT3M5/N1Q6y1Rm4qvRRuSe/cc031UM57XqjH5Pevh9xI/ft/o74H/gRm2aeeVeFgFgAAAABJRU5ErkJggg==" />
-        <span class="sf-toolbar-status{% if 20 < collector.querycount %} sf-toolbar-status-yellow{% endif %}">{{ collector.querycount }}</span>
-        {% if collector.querycount > 0 %}
+        <span class="sf-toolbar-status{% if 10 < collector.queriesCount %} sf-toolbar-status-yellow{% endif %}">{{ collector.queriesCount }}</span>
+        {% if collector.queriesCount > 0 %}
             <span class="sf-toolbar-info-piece-additional-detail">in {{ '%0.2f'|format(collector.time * 1000) }} ms</span>
         {% endif %}
     {% endset %}
     {% set text %}
         <div class="sf-toolbar-info-piece">
             <b>Sphinx Queries</b>
-            <span>{{ collector.querycount }}</span>
+            <span>{{ collector.queriesCount }}</span>
         </div>
         <div class="sf-toolbar-info-piece">
             <b>Query time</b>
@@ -32,7 +32,7 @@
         <span class="icon"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsSAAALEgHS3X78AAACHklEQVR42uWWS0hVQRjH55ZgD7E2EZJRigYVlCgaGHEvCIVCiRAJUUEtbeNGCNvYKhI3bgo3rtzkg2ilEtHFlYIktQijB6QkQVGab7Juv4/zHZym273Hc+0u6oMf55yZM+c/8z1mTiSRSJhs2pasqv0XgpFoNJpVwZwNvLsVTkA9xKDK6nsKY/AE+sKuMBdOwyU4AgchL8DEvsEkjMI9mEglWAjlKnQB9myCFx/BXb0uimAdN5VwBYoDzF7CEAkh/BZqJEvPQ1sKsRUYgEY4DgsBPv4R5p02+X6PCF6DV0kGDeuq9+qkeuEl7AgguAqHoVO94tu8X4cXYdkZJDPsh69W2w+YCSD4GN5DM5TCG7/DFxyHc84gWdVzKHLaB9OISQhuWM/voAza5cHN0gp1nR3Pz9AC3fq8T9199A+CHfp+MitNVod5uoqT5tdsFJEmmILd8FBF5f01mFWxDmvMLtgPZ+G27VLbJAulDi877WfgmfF2kwY4ZbzEsPHFZBe6Dy+MV/g7/Y+k20sPQKuKb3f65CCVGE/DF528hKLErG8YI3BHvfM9iKBvkjgS9GooMKkL/5O6/SYMuZ0bPS3yjZfm1+Gq0/dB22QTnzNeCf1mYY+nbcbLXt/NEivZHpfSDQx7AEut2dnYFUQsE0GxW8ZLFrFDQQdlIihZ16P3tcZzc1qLZPKbGIvFROQBHINoPB5//VcFw9i//5uYdcGfboVyxaBNKr8AAAAASUVORK5CYII=" alt="" /></span>
         <strong>Sphinxy</strong>
         <span class="count">
-            <span>{{ collector.querycount }}</span>
+            <span>{{ collector.queriesCount }}</span>
             <span>{{ '%0.0f'|format(collector.time * 1000) }} ms</span>
         </span>
     </span>
@@ -120,10 +120,20 @@
     <h2>Sphinx Connections</h2>
 
     {% if collector.connections %}
-        {% include 'WebProfilerBundle:Profiler:table.html.twig' with {data: collector.connections} only %}
+        {{ include('WebProfilerBundle:Profiler:table.html.twig', {data: collector.connections}, false) }}
     {% else %}
         <p>
             <em>No connections.</em>
+        </p>
+    {% endif %}
+
+    <h2>Sphinx Indexers</h2>
+
+    {% if collector.indexers %}
+        {{ include('WebProfilerBundle:Profiler:table.html.twig', {data: collector.indexers}, false) }}
+    {% else %}
+        <p>
+            <em>No indexers.</em>
         </p>
     {% endif %}
 

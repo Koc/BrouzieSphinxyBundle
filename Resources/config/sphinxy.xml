@@ -34,6 +34,7 @@
         <service id="data_collector.sphinxy" class="Brouzie\Bundle\SphinxyBundle\DataCollector\SphinxyDataCollector" public="false">
             <tag name="data_collector" template="BrouzieSphinxyBundle:Collector:sphinxy" id="sphinxy" />
             <argument type="service" id="sphinxy" />
+            <argument>%sphinxy.indexers%</argument>
         </service>
     </services>
 
