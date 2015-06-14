@@ -1,18 +1,18 @@
 {
     "name": "brouzie/sphinxy-bundle",
     "description": "Sphinxy integration for Symfony2",
-    "keywords": ["sphinx", "sphinxy", "symfony"],
+    "keywords": ["sphinx", "sphinxsearch", "sphinxy", "symfony"],
     "homepage": "https://github.com/Koc/BrouzieSphinxyBundle",
     "license": "MIT",
     "authors": [
         {
-            "name": "Konstantin.Myakshin",
+            "name": "Konstantin Myakshin",
             "email": "koc-dp@yandex.ru"
         }
     ],
     "require": {
-        "php": ">=5.3.8",
-        "symfony/framework-bundle": ">=2.1,<3.0",
+        "php": ">=5.4.0",
+        "symfony/framework-bundle": ">=2.3,<3.0",
         "doctrine/doctrine-bundle": "~1.2"
     },
     "require-dev": {
