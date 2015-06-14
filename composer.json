@@ -20,9 +20,8 @@
         "symfony/console": ">=2.1,<3.0"
     },
     "autoload": {
-        "psr-0": {
-            "Brouzie\\Bundle\\SphinxyBundle": ""
+        "psr-4": {
+            "Brouzie\\Bundle\\SphinxyBundle\\": ""
         }
-    },
-    "target-dir" : "Brouzie/Bundle/SphinxyBundle"
+    }
 }
