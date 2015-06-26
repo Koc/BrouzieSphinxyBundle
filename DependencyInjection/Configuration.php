@@ -9,7 +9,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 /**
  * SphinxyBundle configuration class.
  *
- * @author Konstantin.Myakshin <koc-dp@yandex.ru>
+ * @author Konstantin Myakshin <koc-dp@yandex.ru>
  */
 class Configuration implements ConfigurationInterface
 {
