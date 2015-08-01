@@ -19,7 +19,7 @@ class Registry extends BaseRegistry implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConnection($name = null)
     {
@@ -27,7 +27,7 @@ class Registry extends BaseRegistry implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConnections()
     {

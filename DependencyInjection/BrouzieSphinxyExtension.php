@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Loader;
 class BrouzieSphinxyExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {

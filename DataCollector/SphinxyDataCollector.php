@@ -38,7 +38,7 @@ class SphinxyDataCollector extends DataCollector
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
@@ -55,7 +55,7 @@ class SphinxyDataCollector extends DataCollector
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
