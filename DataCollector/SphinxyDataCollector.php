@@ -2,12 +2,11 @@
 
 namespace Brouzie\Bundle\SphinxyBundle\DataCollector;
 
+use Brouzie\Bundle\SphinxyBundle\Sphinxy\Registry;
+use Brouzie\Sphinxy\Logging\DebugStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-
-use Brouzie\Bundle\SphinxyBundle\Sphinxy\Registry;
-use Brouzie\Sphinxy\Logging\DebugStack;
 
 class SphinxyDataCollector extends DataCollector
 {
@@ -105,7 +104,7 @@ class SphinxyDataCollector extends DataCollector
 
     private function sanitizeQuery($query)
     {
-        $query['params'] = (array)$query['params'];
+        $query['params'] = (array) $query['params'];
 
         return $query;
     }

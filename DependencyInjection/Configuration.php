@@ -17,7 +17,7 @@ class Configuration implements ConfigurationInterface
 
     public function __construct($debug)
     {
-        $this->debug = (bool)$debug;
+        $this->debug = (bool) $debug;
     }
 
     /**
@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Adds the brouzie_sphinxy.connections configuration
+     * Adds the brouzie_sphinxy.connections configuration.
      *
      * @param ArrayNodeDefinition $rootNode
      */
