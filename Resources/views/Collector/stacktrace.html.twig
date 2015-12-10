@@ -7,7 +7,7 @@
                     {% if trace.function %}
                         at
                         <strong>
-                            {% if trace.class is defined %}<abbr title="{{ trace.class }}">{{ trace.class }}</abbr>{% endif %}
+                            {% if trace.class is defined %}<abbr title="{{ trace.class }}">{{ trace.class|abbr_class }}</abbr>{% endif %}
                             {{ trace.type|default('') ~ trace.function }}
                         </strong>
                         {#({{ trace.args|format_args }})#}
