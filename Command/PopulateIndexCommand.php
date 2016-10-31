@@ -3,11 +3,12 @@
 namespace Brouzie\Bundle\SphinxyBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Helper\ProgressHelper;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class PopulateIndexCommand extends ContainerAwareCommand
 {
@@ -20,25 +21,24 @@ class PopulateIndexCommand extends ContainerAwareCommand
             ->addArgument('index', InputArgument::REQUIRED)
             ->addOption('truncate', null, InputOption::VALUE_NONE)
             ->addOption('increment', null, InputOption::VALUE_NONE)
-            ->addOption('batch-size', null, InputOption::VALUE_OPTIONAL, '', 1000)
-//            ->addOption('connection', null, InputOption::VALUE_OPTIONAL)
-        ;
+            ->addOption('batch-size', null, InputOption::VALUE_OPTIONAL, '', 1000);
+        //            ->addOption('connection', null, InputOption::VALUE_OPTIONAL)
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $index = $input->getArgument('index');
         $indexManager = $this->getContainer()->get('sphinxy.index_manager');
 
         if ($input->getOption('truncate')) {
-            $output->writeln('<info>Truncate index</info>');
+            $io->text(sprintf('<info>[%s]</info> Truncate <info>%s</info> index ', date('Y-m-d H:i:s'), $index));
             $indexManager->truncate($index);
         }
 
-        $progress = $this->getHelperSet()->get('progress');
-        /* @var $progress ProgressHelper  */
-        $progress->setBarWidth(50);
-        //FIXME: fix percentage calculation for last iteration
+        $progressBar = new ProgressBar($io);
+        $progressBar->setBarWidth(60);
 
         $rangeCriterias = array();
         if ($input->getOption('increment')) {
@@ -47,17 +47,20 @@ class PopulateIndexCommand extends ContainerAwareCommand
             }
         }
 
-        $batchCallback = function ($info) use ($output, $progress) {
-            static $started = false;
-            if (!$started) {
-                $progress->start($output, $info['max_id']);
-                $started = true;
+        $batchCallback = function ($info) use ($progressBar) {
+            if (!$progressBar->getMaxSteps()) {
+                $progressBar->start($info['max_id']);
             }
 
-            $progress->setCurrent($info['id_from'], true);
+            $progressBar->setProgress($info['id_from']);
         };
+
+        $io->text(sprintf('<info>[%s]</info> Populate <info>%s</info> index ', date('Y-m-d H:i:s'), $index));
+
         $indexManager->reindex($index, $input->getOption('batch-size'), $batchCallback, $rangeCriterias);
 
-        $progress->finish();
+        $progressBar->finish();
+
+        $io->success('Index was successful populated.');
     }
 }
