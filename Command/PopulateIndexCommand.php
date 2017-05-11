@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\LockHandler;
 
 class PopulateIndexCommand extends ContainerAwareCommand
 {
@@ -22,7 +23,7 @@ class PopulateIndexCommand extends ContainerAwareCommand
             ->addOption('truncate', null, InputOption::VALUE_NONE)
             ->addOption('increment', null, InputOption::VALUE_NONE)
             ->addOption('batch-size', null, InputOption::VALUE_OPTIONAL, '', 1000);
-        //            ->addOption('connection', null, InputOption::VALUE_OPTIONAL)
+//            ->addOption('connection', null, InputOption::VALUE_OPTIONAL);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -30,6 +31,15 @@ class PopulateIndexCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input, $output);
 
         $index = $input->getArgument('index');
+
+        $lock = new LockHandler(sprintf('%s:%s', $this->getName(), $index));
+
+        if (!$lock->lock(true)) {
+            $io->error('The command is already running in another process.');
+
+            return 0;
+        }
+
         $indexManager = $this->getContainer()->get('sphinxy.index_manager');
 
         if ($input->getOption('truncate')) {
@@ -60,7 +70,8 @@ class PopulateIndexCommand extends ContainerAwareCommand
         $indexManager->reindex($index, $input->getOption('batch-size'), $batchCallback, $rangeCriterias);
 
         $progressBar->finish();
+        $lock->release();
 
-        $io->success('Index was successful populated.');
+        $io->success(sprintf('[%s] Index "%s" was successful populated.', date('Y-m-d H:i:s'), $index));
     }
 }
